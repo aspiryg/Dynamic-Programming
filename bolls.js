@@ -77,19 +77,21 @@ def get_partitions(set_):
 function* partitions(inputSet) {
   const elements = Array.from(inputSet);
   const n = elements.length;
+
   if (n === 0) {
     yield [];
     return;
   }
 
-  const limit = 2 ** n / 2;
+  const limit = Math.floor(2 ** n / 2);
 
   for (let i = 0; i < limit; ++i) {
     let itemI = i;
     let parts = [new Set(), new Set()];
+
     for (const item of elements) {
       parts[itemI & 1].add(item);
-      itemI <<= 1;
+      itemI >>= 1; // ✅ FIX
     }
 
     for (const b of partitions(parts[1])) {
@@ -105,8 +107,35 @@ function* getPartitions(inputSet) {
 }
 
 //
-const mySet = [1, 2, 3];
+const mySet = [1, 2, 3, 4, 5];
 console.log(`Partitions for [${mySet}]:`);
 for (const p of getPartitions(mySet)) {
   console.log(JSON.stringify(p));
 }
+
+// const list = [
+//   [[A, B, C, D]],
+//   [[B, C, D], [A]],
+//   [[A, C, D], [B]],
+//   [
+//     [C, D],
+//     [A, B],
+//   ],
+//   [[C, D], [B], [A]],
+//   [[A, B, D], [C]],
+//   [
+//     [B, D],
+//     [A, C],
+//   ],
+//   [[B, D], [C], [A]],
+//   [
+//     [A, D],
+//     [B, C],
+//   ],
+//   [[A, D], [C], [B]],
+//   [[D], [A, B, C]],
+//   [[D], [B, C], [A]],
+//   [[D], [A, C], [B]],
+//   [[D], [C], [A, B]],
+//   [[D], [C], [B], [A]],
+// ];
